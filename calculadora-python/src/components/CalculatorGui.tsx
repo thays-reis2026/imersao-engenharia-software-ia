@@ -56,21 +56,17 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Compute step-by-step breakdown using current or last expression
   const stepExplanation: StepExplanationResult = explainCalculationSteps(
     expression.trim() || lastExpression.trim(),
     isDegreeMode
   );
 
-  // Sync angle mode with Python service
   useEffect(() => {
     pyodideService.setDegMode(isDegreeMode);
   }, [isDegreeMode]);
 
-  // Keyboard navigation & typing handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't capture if user is typing in another input/textarea
       if (
         document.activeElement?.tagName === 'INPUT' &&
         document.activeElement !== inputRef.current
@@ -134,7 +130,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
         setResult(res.result);
         setError(null);
 
-        // Record history
         onAddHistory({
           id: Math.random().toString(36).substring(2, 9),
           expression: exprToRun,
@@ -146,7 +141,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
         setError(res.error);
         setResult('Erro');
       } else if (res.stdout) {
-        // In case code ran as statement and printed
         setResult(res.stdout);
         setError(null);
       } else {
@@ -167,7 +161,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
     setTimeout(() => setCopied(false), 1800);
   };
 
-  // Memory operations
   const handleMemoryAdd = () => {
     const num = parseFloat(result) || 0;
     const newMem = memory + num;
@@ -191,7 +184,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
     pyodideService.setMemory(0);
   };
 
-  // Generate clean Python code representation for the user
   const getPythonCodeSnippet = () => {
     if (!expression) return '# Digite uma expressão ou clique nos botões acima\nimport math\nresultado = 0';
     return `# Expressão calculada em Python CPython\nimport math\n\nexpressao = "${expression.replace(/"/g, '\\"')}"\nresultado = ${expression}`;
@@ -199,11 +191,10 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
 
   return (
     <div className="grid grid-cols-1 min-[1101px]:grid-cols-12 gap-6 min-[1101px]:gap-8 items-start w-full">
-      {/* Left/Main Column: The Calculator Visual Interface */}
+      {/* Left Column: Calculator Interface */}
       <div className="w-full min-[1101px]:col-span-7 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-6 shadow-2xl">
-        {/* Top Controls Toolbar - Mobile (< 640px): 2 rows */}
+        {/* Top Controls Toolbar - Mobile */}
         <div className="flex sm:hidden flex-col pb-4 border-b border-white/20 gap-2.5">
-          {/* Row 1: DEG/RAD on left, Limpar on right */}
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-1.5 p-1 bg-white/5 rounded-lg border border-white/20 shrink-0">
               <button
@@ -236,7 +227,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
             </button>
           </div>
 
-          {/* Row 2: Básica | Científica full width, equal size, centered text */}
           <div
             role="radiogroup"
             aria-label="Modo da calculadora"
@@ -272,7 +262,7 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
           </div>
         </div>
 
-        {/* Top Controls Toolbar - Tablet & Desktop (>= 640px) */}
+        {/* Top Controls Toolbar - Tablet & Desktop */}
         <div className="hidden sm:flex items-center justify-between pb-4 border-b border-white/20 gap-2">
           <div className="flex items-center gap-1.5 p-1 bg-white/5 rounded-lg border border-white/20 shrink-0">
             <button
@@ -298,7 +288,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* Segmented Mode Selector (Básica / Científica) */}
             <div
               role="radiogroup"
               aria-label="Modo da calculadora"
@@ -344,7 +333,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
 
         {/* Display Screen */}
         <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/20 flex flex-col justify-between min-h-[140px]">
-          {/* Previous Expression & Meta */}
           <div className="flex items-center justify-between text-xs text-zinc-300 font-mono tracking-wide">
             <div className="truncate max-w-[80%] text-zinc-300">
               {lastExpression ? `${lastExpression} =` : 'Python Math Ready'}
@@ -356,7 +344,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
             )}
           </div>
 
-          {/* Current Input Field */}
           <div className="my-2">
             <input
               ref={inputRef}
@@ -371,7 +358,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
             />
           </div>
 
-          {/* Computed Result Display with Copy */}
           <div className="flex items-end justify-between pt-2 border-t border-white/20">
             <div className="text-[11px] font-mono text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
               <span>Resultado</span>
@@ -405,7 +391,6 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
           </div>
         </div>
 
-        {/* Error Notification */}
         {error && (
           <div className="mt-3 p-3 bg-red-950/60 border border-red-500/60 rounded-xl text-white text-xs font-mono">
             <strong className="text-white">Erro em Python:</strong> {error}
@@ -536,7 +521,7 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
           </div>
         )}
 
-        {/* Primary Keypad (Numbers & Basic Operators) */}
+        {/* Primary Keypad */}
         <div className="grid grid-cols-4 gap-2.5 mt-4">
           <button
             onClick={handleClear}
@@ -677,77 +662,4 @@ export const CalculatorGui: React.FC<CalculatorGuiProps> = ({
             abs()
           </button>
           <button
-            onClick={() => handleAppend('round(')}
-            className="px-2 py-1 rounded bg-white/5 border border-white/20 text-zinc-300 hover:text-white text-[11px] font-mono"
-          >
-            round()
-          </button>
-          <button
-            onClick={() => handleAppend('_ans')}
-            className="px-2 py-1 rounded bg-white/5 border border-white/20 text-zinc-300 hover:text-white text-[11px] font-mono"
-          >
-            _ans
-          </button>
-          <button
-            onClick={() => handleAppend('sum([')}
-            className="px-2 py-1 rounded bg-white/5 border border-white/20 text-zinc-300 hover:text-white text-[11px] font-mono"
-          >
-            sum([])
-          </button>
-        </div>
-      </div>
-
-      {/* Right Column: Real-time Python Code Representation & Education */}
-      <div className="w-full min-[1101px]:col-span-5 flex flex-col gap-6">
-        {/* Tabbed Card: Python Code & Step-by-step */}
-        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-xl flex flex-col">
-          {/* Tabs Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-white/20 gap-2">
-            <div className="w-full sm:w-auto flex items-center gap-1.5 p-1 bg-white/5 rounded-lg border border-white/20">
-              <button
-                onClick={() => setActiveRightTab('code')}
-                className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-colors whitespace-nowrap ${
-                  activeRightTab === 'code'
-                    ? 'bg-white text-black font-bold shadow-sm'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                <Terminal className="w-3.5 h-3.5" />
-                <span>Código Python</span>
-              </button>
-              <button
-                onClick={() => setActiveRightTab('steps')}
-                className={`flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-colors whitespace-nowrap ${
-                  activeRightTab === 'steps'
-                    ? 'bg-white text-black font-bold shadow-sm'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                <ListOrdered className="w-3.5 h-3.5" />
-                <span>Passo a passo</span>
-              </button>
-            </div>
-
-            {activeRightTab === 'code' && (
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(getPythonCodeSnippet());
-                }}
-                className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:text-white bg-white/5 hover:bg-white/15 border border-white/20 rounded-lg transition-colors"
-              >
-                <Copy className="w-3.5 h-3.5" />
-                <span>Copiar</span>
-              </button>
-            )}
-          </div>
-
-          {/* Tab Content: Python Code view */}
-          {activeRightTab === 'code' && (
-            <div className="mt-4 flex flex-col gap-3">
-              <span className="text-xs text-zinc-300 font-mono">
-                Veja como este cálculo é executado em Python real com a biblioteca nativa <code className="text-white font-bold">math</code>:
-              </span>
-              <div className="p-3.5 rounded-xl bg-black/60 border border-white/20 font-mono text-xs text-white overflow-x-auto whitespace-pre leading-relaxed">
-                {getPythonCodeSnippet()}
-                {result !== '0' && result !== 'Erro' && !error && (
-                  <span className="text-zinc-
+            onClick
