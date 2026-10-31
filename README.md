@@ -108,8 +108,8 @@ Then open http://localhost:3000. No API key is required.
 
 ---
 
-## 🖼️ Prints | Screenshots
+## 📸 Prints | Screenshots
 
-| Modo claro / Light mode | Celular / Mobile |
-|---|---|
-| ![Modo claro](assets/desktop-claro.png) | ![Modo escuro](assets/desktop-escuro.png) | ![Celular](assets/celular.png) | 
+| Modo claro / Light mode | Modo escuro / Dark mode | Celular / Mobile |
+| :---: | :---: | :---: |
+| <img src="assets/desktop-claro.png" width="280" /> | <img src="assets/desktop-escuro.png" width="280" /> | <img src="assets/celular.png" height="220" /> |
