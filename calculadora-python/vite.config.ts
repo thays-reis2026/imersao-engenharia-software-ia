@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: base: '/imersao-engenharia-software-ia/',
+    base: '/imersao-engenharia-software-ia/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
