@@ -1,0 +1,6 @@
+{
+  "name": "Calculadora Python",
+  "description": "Calculadora científica e interativa com interpretador Python real no navegador, terminal REPL, editor de scripts e download de códigos Python.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

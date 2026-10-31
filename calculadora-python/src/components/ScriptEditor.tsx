@@ -1,0 +1,229 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState } from 'react';
+import { pyodideService, PyResult } from '../services/pyodideService';
+import { RUNNABLE_SNIPPETS } from '../data/pythonTemplates';
+import { Play, RotateCcw, Copy, Check, Download, Terminal, Loader2 } from 'lucide-react';
+
+export const ScriptEditor: React.FC = () => {
+  const [selectedSnippetIdx, setSelectedSnippetIdx] = useState<number>(0);
+  const [code, setCode] = useState<string>(RUNNABLE_SNIPPETS[0].code);
+  const [stdout, setStdout] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [executionTime, setExecutionTime] = useState<number | null>(null);
+  const [copied, setCopied] = useState<boolean>(false);
+
+  const handleSelectSnippet = (idx: number) => {
+    setSelectedSnippetIdx(idx);
+    setCode(RUNNABLE_SNIPPETS[idx].code);
+    setStdout('');
+    setError(null);
+    setExecutionTime(null);
+  };
+
+  const handleRunScript = async () => {
+    if (!code.trim()) return;
+
+    setIsRunning(true);
+    setStdout('');
+    setError(null);
+
+    try {
+      const res: PyResult = await pyodideService.runScript(code);
+      setExecutionTime(res.executionTimeMs);
+
+      if (res.success) {
+        setStdout(res.stdout || '# Script executado com sucesso (sem saída no console).');
+      } else {
+        setError(res.error || 'Erro na execução do script');
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Falha ao executar script');
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const handleReset = () => {
+    setCode(RUNNABLE_SNIPPETS[selectedSnippetIdx].code);
+    setStdout('');
+    setError(null);
+    setExecutionTime(null);
+  };
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  const handleDownload = () => {
+    const blob = new Blob([code], { type: 'text/x-python;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'meu_script_calculadora.py';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Top Template Selector Strip */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        <span className="text-xs font-bold text-[#F0B8B8] whitespace-nowrap">Modelos Prontos:</span>
+        {RUNNABLE_SNIPPETS.map((snippet, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleSelectSnippet(idx)}
+            className={`px-3 py-1.5 text-xs rounded-lg border whitespace-nowrap transition-colors ${
+              selectedSnippetIdx === idx
+                ? 'bg-[#C75F71] text-white font-bold border-[#C75F71] shadow-sm shadow-[#C75F71]/30'
+                : 'bg-[#3D3229] text-[#A2AE9D] border-[#A2AE9D]/30 hover:text-white hover:border-[#A2AE9D]/60'
+            }`}
+          >
+            {snippet.title}
+          </button>
+        ))}
+      </div>
+
+      {/* Editor & Console Split */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Code Editor Pane */}
+        <div className="lg:col-span-7 bg-[#45392F] border border-[#A2AE9D]/30 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[560px]">
+          {/* Header */}
+          <div className="px-5 py-3 bg-[#352B23] border-b border-[#A2AE9D]/30 flex items-center justify-between">
+            <span className="text-xs font-mono font-bold text-[#F0B8B8]">
+              editor ~ {RUNNABLE_SNIPPETS[selectedSnippetIdx].title.toLowerCase().replace(/\s+/g, '_')}.py
+            </span>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCopyCode}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#FFF5F5] hover:text-[#F0B8B8] rounded-md hover:bg-[#2D231B] transition-colors"
+                title="Copiar código"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-[#A2AE9D]" /> : <Copy className="w-3.5 h-3.5" />}
+                <span className="hidden sm:inline">Copiar</span>
+              </button>
+
+              <button
+                onClick={handleDownload}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs text-[#A2AE9D] hover:text-white rounded-md hover:bg-[#2D231B] transition-colors"
+                title="Baixar como .py"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Baixar .py</span>
+              </button>
+
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs text-[#A2AE9D] hover:text-[#F0B8B8] rounded-md hover:bg-[#2D231B] transition-colors"
+                title="Restaurar código original"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Resetar</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Textarea Code Input */}
+          <div className="flex-1 relative bg-[#2D231B]">
+            <textarea
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              spellCheck={false}
+              className="w-full h-full p-4 font-mono text-xs sm:text-sm text-white bg-transparent resize-none focus:outline-none leading-relaxed placeholder-[#A2AE9D]/40"
+              placeholder="# Escreva seu script Python aqui..."
+            />
+          </div>
+
+          {/* Action Bar */}
+          <div className="p-3 bg-[#352B23] border-t border-[#A2AE9D]/30 flex items-center justify-between">
+            <span className="text-[11px] text-[#A2AE9D] font-mono">
+              Python 3.12 · Suporta módulos math, statistics, cmath
+            </span>
+
+            <button
+              onClick={handleRunScript}
+              disabled={isRunning || !code.trim()}
+              className="px-4 py-2 bg-[#C75F71] hover:bg-[#b34f60] disabled:opacity-50 text-white font-bold text-xs rounded-xl transition-all shadow-md shadow-[#C75F71]/30 flex items-center gap-2"
+            >
+              {isRunning ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Executando...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-current" />
+                  <span>Executar Script</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Output Console Pane */}
+        <div className="lg:col-span-5 bg-[#45392F] border border-[#A2AE9D]/30 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[560px]">
+          {/* Header */}
+          <div className="px-5 py-3 bg-[#352B23] border-b border-[#A2AE9D]/30 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-[#F0B8B8]" />
+              <span className="text-xs font-mono font-bold text-[#F0B8B8]">Saída do Console (stdout)</span>
+            </div>
+            {executionTime !== null && (
+              <span className="text-[11px] font-mono text-[#F0B8B8] font-medium tabular-nums">
+                {executionTime}ms
+              </span>
+            )}
+          </div>
+
+          {/* Output Content */}
+          <div className="flex-1 p-4 bg-[#2D231B] font-mono text-xs sm:text-sm overflow-y-auto space-y-2">
+            {!stdout && !error && (
+              <div className="text-[#A2AE9D]/80 italic py-8 text-center text-xs">
+                Clique em &quot;Executar Script&quot; para visualizar a saída do console.
+              </div>
+            )}
+
+            {stdout && (
+              <pre className="text-[#F7EDE8] whitespace-pre-wrap leading-relaxed">
+                {stdout}
+              </pre>
+            )}
+
+            {error && (
+              <div className="p-3 bg-[#3A2226] border border-[#C75F71]/60 rounded-xl text-[#F0B8B8] whitespace-pre-wrap text-xs">
+                <strong className="text-white">Erro na Execução:</strong>
+                <p className="mt-1">{error}</p>
+              </div>
+            )}
+          </div>
+
+          <div className="p-3 bg-[#352B23] border-t border-[#A2AE9D]/30 text-[11px] text-[#A2AE9D] flex items-center justify-between">
+            <span>Terminal CPython integrado</span>
+            {stdout && (
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(stdout);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1800);
+                }}
+                className="text-[#FFF5F5] font-semibold hover:text-[#F0B8B8] transition-colors"
+              >
+                Copiar saída
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
