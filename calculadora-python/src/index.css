@@ -117,3 +117,54 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--theme-scrollbar-hover);
 }
+
+/* Strict responsive visibility for Header navigation (threshold: 1100px) */
+@media (max-width: 1100px) {
+  .desktop-only-menu {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1101px) {
+  .tablet-mobile-nav {
+    display: none !important;
+  }
+}
+
+/* Strict mutually exclusive responsive visibility for subline below header */
+@media (max-width: 640px) {
+  .subline-mobile {
+    display: flex !important;
+  }
+  .subline-tablet {
+    display: none !important;
+  }
+  .subline-desktop {
+    display: none !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1100px) {
+  .subline-mobile {
+    display: none !important;
+  }
+  .subline-tablet {
+    display: flex !important;
+  }
+  .subline-desktop {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1101px) {
+  .subline-mobile {
+    display: none !important;
+  }
+  .subline-tablet {
+    display: none !important;
+  }
+  .subline-desktop {
+    display: flex !important;
+  }
+}
+
