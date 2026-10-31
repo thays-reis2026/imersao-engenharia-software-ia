@@ -77,15 +77,15 @@ export const ScriptEditor: React.FC = () => {
     <div className="space-y-6">
       {/* Top Template Selector Strip */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
-        <span className="text-xs font-bold text-[#F0B8B8] whitespace-nowrap">Modelos Prontos:</span>
+        <span className="text-xs font-bold text-[var(--theme-text-main)] whitespace-nowrap">Modelos Prontos:</span>
         {RUNNABLE_SNIPPETS.map((snippet, idx) => (
           <button
             key={idx}
             onClick={() => handleSelectSnippet(idx)}
-            className={`px-3 py-1.5 text-xs rounded-lg border whitespace-nowrap transition-colors ${
+            className={`px-3 py-1.5 text-xs rounded-lg border whitespace-nowrap transition-colors cursor-pointer ${
               selectedSnippetIdx === idx
-                ? 'bg-[#C75F71] text-white font-bold border-[#C75F71] shadow-sm shadow-[#C75F71]/30'
-                : 'bg-[#3D3229] text-[#A2AE9D] border-[#A2AE9D]/30 hover:text-white hover:border-[#A2AE9D]/60'
+                ? 'bg-[#C75F71] text-white font-bold keep-white border-[#C75F71] shadow-sm shadow-[#C75F71]/30'
+                : 'bg-[rgba(255,255,255,0.08)] text-[var(--theme-text-main)] border-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.14)]'
             }`}
           >
             {snippet.title}
@@ -96,74 +96,74 @@ export const ScriptEditor: React.FC = () => {
       {/* Editor & Console Split */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Code Editor Pane */}
-        <div className="lg:col-span-7 bg-[#45392F] border border-[#A2AE9D]/30 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[560px]">
+        <div className="lg:col-span-7 bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.2)] rounded-2xl overflow-hidden shadow-xl flex flex-col h-[560px]">
           {/* Header */}
-          <div className="px-5 py-3 bg-[#352B23] border-b border-[#A2AE9D]/30 flex items-center justify-between">
-            <span className="text-xs font-mono font-bold text-[#F0B8B8]">
+          <div className="px-5 py-3 bg-[rgba(255,255,255,0.08)] border-b border-[rgba(255,255,255,0.2)] flex items-center justify-between">
+            <span className="text-xs font-mono font-bold text-[var(--theme-text-main)]">
               editor ~ {RUNNABLE_SNIPPETS[selectedSnippetIdx].title.toLowerCase().replace(/\s+/g, '_')}.py
             </span>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={handleCopyCode}
-                className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[#FFF5F5] hover:text-[#F0B8B8] rounded-md hover:bg-[#2D231B] transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-[var(--theme-text-main)] rounded-md hover:bg-[rgba(255,255,255,0.14)] transition-colors cursor-pointer"
                 title="Copiar código"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-[#A2AE9D]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[var(--theme-text-main)]" /> : <Copy className="w-3.5 h-3.5 text-[var(--theme-text-main)]" />}
                 <span className="hidden sm:inline">Copiar</span>
               </button>
 
               <button
                 onClick={handleDownload}
-                className="flex items-center gap-1 px-2.5 py-1 text-xs text-[#A2AE9D] hover:text-white rounded-md hover:bg-[#2D231B] transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1 text-xs text-[var(--theme-text-main)] rounded-md hover:bg-[rgba(255,255,255,0.14)] transition-colors cursor-pointer"
                 title="Baixar como .py"
               >
-                <Download className="w-3.5 h-3.5" />
+                <Download className="w-3.5 h-3.5 text-[var(--theme-text-main)]" />
                 <span className="hidden sm:inline">Baixar .py</span>
               </button>
 
               <button
                 onClick={handleReset}
-                className="flex items-center gap-1 px-2.5 py-1 text-xs text-[#A2AE9D] hover:text-[#F0B8B8] rounded-md hover:bg-[#2D231B] transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1 text-xs text-[var(--theme-text-main)] rounded-md hover:bg-[rgba(255,255,255,0.14)] transition-colors cursor-pointer"
                 title="Restaurar código original"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 text-[var(--theme-text-main)]" />
                 <span className="hidden sm:inline">Resetar</span>
               </button>
             </div>
           </div>
 
           {/* Textarea Code Input */}
-          <div className="flex-1 relative bg-[#2D231B]">
+          <div className="flex-1 relative bg-[rgba(255,255,255,0.03)]">
             <textarea
               value={code}
               onChange={(e) => setCode(e.target.value)}
               spellCheck={false}
-              className="w-full h-full p-4 font-mono text-xs sm:text-sm text-white bg-transparent resize-none focus:outline-none leading-relaxed placeholder-[#A2AE9D]/40"
+              className="w-full h-full p-4 font-mono text-xs sm:text-sm text-[var(--theme-text-main)] bg-transparent resize-none focus:outline-none leading-relaxed placeholder-[var(--theme-text-muted)]"
               placeholder="# Escreva seu script Python aqui..."
             />
           </div>
 
           {/* Action Bar */}
-          <div className="p-3 bg-[#352B23] border-t border-[#A2AE9D]/30 flex items-center justify-between">
-            <span className="text-[11px] text-[#A2AE9D] font-mono">
+          <div className="p-3 bg-[rgba(255,255,255,0.06)] border-t border-[rgba(255,255,255,0.2)] flex items-center justify-between">
+            <span className="text-[11px] text-[var(--theme-text-secondary)] font-mono">
               Python 3.12 · Suporta módulos math, statistics, cmath
             </span>
 
             <button
               onClick={handleRunScript}
               disabled={isRunning || !code.trim()}
-              className="px-4 py-2 bg-[#C75F71] hover:bg-[#b34f60] disabled:opacity-50 text-white font-bold text-xs rounded-xl transition-all shadow-md shadow-[#C75F71]/30 flex items-center gap-2"
+              className="px-4 py-2 bg-[#C75F71] hover:bg-[#b34f60] disabled:opacity-50 text-white keep-white font-bold text-xs rounded-xl transition-all shadow-md shadow-[#C75F71]/30 flex items-center gap-2 cursor-pointer"
             >
               {isRunning ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Executando...</span>
+                  <Loader2 className="w-4 h-4 animate-spin text-white keep-white" />
+                  <span className="text-white keep-white">Executando...</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-4 h-4 fill-current" />
-                  <span>Executar Script</span>
+                  <Play className="w-4 h-4 fill-current text-white keep-white" />
+                  <span className="text-white keep-white">Executar Script</span>
                 </>
               )}
             </button>
@@ -171,43 +171,43 @@ export const ScriptEditor: React.FC = () => {
         </div>
 
         {/* Output Console Pane */}
-        <div className="lg:col-span-5 bg-[#45392F] border border-[#A2AE9D]/30 rounded-2xl overflow-hidden shadow-xl flex flex-col h-[560px]">
+        <div className="lg:col-span-5 bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.2)] rounded-2xl overflow-hidden shadow-xl flex flex-col h-[560px]">
           {/* Header */}
-          <div className="px-5 py-3 bg-[#352B23] border-b border-[#A2AE9D]/30 flex items-center justify-between">
+          <div className="px-5 py-3 bg-[rgba(255,255,255,0.08)] border-b border-[rgba(255,255,255,0.2)] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-[#F0B8B8]" />
-              <span className="text-xs font-mono font-bold text-[#F0B8B8]">Saída do Console (stdout)</span>
+              <Terminal className="w-4 h-4 text-[var(--theme-text-main)]" />
+              <span className="text-xs font-mono font-bold text-[var(--theme-text-main)]">Saída do Console (stdout)</span>
             </div>
             {executionTime !== null && (
-              <span className="text-[11px] font-mono text-[#F0B8B8] font-medium tabular-nums">
+              <span className="text-[11px] font-mono text-[var(--theme-text-secondary)] font-medium tabular-nums">
                 {executionTime}ms
               </span>
             )}
           </div>
 
           {/* Output Content */}
-          <div className="flex-1 p-4 bg-[#2D231B] font-mono text-xs sm:text-sm overflow-y-auto space-y-2">
+          <div className="flex-1 p-4 bg-[rgba(255,255,255,0.03)] font-mono text-xs sm:text-sm overflow-y-auto space-y-2">
             {!stdout && !error && (
-              <div className="text-[#A2AE9D]/80 italic py-8 text-center text-xs">
+              <div className="text-[var(--theme-text-secondary)] italic py-8 text-center text-xs">
                 Clique em &quot;Executar Script&quot; para visualizar a saída do console.
               </div>
             )}
 
             {stdout && (
-              <pre className="text-[#F7EDE8] whitespace-pre-wrap leading-relaxed">
+              <pre className="text-[var(--theme-text-main)] whitespace-pre-wrap leading-relaxed">
                 {stdout}
               </pre>
             )}
 
             {error && (
-              <div className="p-3 bg-[#3A2226] border border-[#C75F71]/60 rounded-xl text-[#F0B8B8] whitespace-pre-wrap text-xs">
-                <strong className="text-white">Erro na Execução:</strong>
+              <div className="p-3 bg-rose-500/15 border border-rose-500/40 rounded-xl text-rose-700 dark:text-rose-200 whitespace-pre-wrap text-xs">
+                <strong className="font-bold">Erro na Execução:</strong>
                 <p className="mt-1">{error}</p>
               </div>
             )}
           </div>
 
-          <div className="p-3 bg-[#352B23] border-t border-[#A2AE9D]/30 text-[11px] text-[#A2AE9D] flex items-center justify-between">
+          <div className="p-3 bg-[rgba(255,255,255,0.06)] border-t border-[rgba(255,255,255,0.2)] text-[11px] text-[var(--theme-text-secondary)] flex items-center justify-between">
             <span>Terminal CPython integrado</span>
             {stdout && (
               <button
@@ -216,7 +216,7 @@ export const ScriptEditor: React.FC = () => {
                   setCopied(true);
                   setTimeout(() => setCopied(false), 1800);
                 }}
-                className="text-[#FFF5F5] font-semibold hover:text-[#F0B8B8] transition-colors"
+                className="text-[var(--theme-text-main)] font-semibold hover:underline transition-colors cursor-pointer"
               >
                 Copiar saída
               </button>

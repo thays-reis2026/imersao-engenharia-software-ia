@@ -6,7 +6,103 @@
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Custom scrollbars for terminal and code views */
+:root, [data-theme='dark'] {
+  --theme-bg-page: #000000;
+  --theme-text-main: #FFFFFF;
+  --theme-text-secondary: rgba(255, 255, 255, 0.75);
+  --theme-text-muted: rgba(255, 255, 255, 0.65);
+  --theme-card-bg: rgba(255, 255, 255, 0.06);
+  --theme-card-border: rgba(255, 255, 255, 0.2);
+  --theme-visor-bg: rgba(255, 255, 255, 0.03);
+  --theme-btn-inactive-bg: rgba(255, 255, 255, 0.08);
+  --theme-btn-inactive-hover: rgba(255, 255, 255, 0.14);
+  --theme-header-bg: rgba(0, 0, 0, 0.85);
+  --theme-drawer-bg: #000000;
+  --theme-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --theme-scrollbar-hover: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme='light'] {
+  --theme-bg-page: #FFFFFF;
+  --theme-text-main: #000000;
+  --theme-text-secondary: rgba(0, 0, 0, 0.75);
+  --theme-text-muted: rgba(0, 0, 0, 0.65);
+  --theme-card-bg: rgba(0, 0, 0, 0.04);
+  --theme-card-border: rgba(0, 0, 0, 0.15);
+  --theme-visor-bg: rgba(0, 0, 0, 0.03);
+  --theme-btn-inactive-bg: rgba(0, 0, 0, 0.06);
+  --theme-btn-inactive-hover: rgba(0, 0, 0, 0.12);
+  --theme-header-bg: rgba(255, 255, 255, 0.85);
+  --theme-drawer-bg: #FFFFFF;
+  --theme-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --theme-scrollbar-hover: rgba(0, 0, 0, 0.4);
+}
+
+html, body {
+  background-color: var(--theme-bg-page);
+  color: var(--theme-text-main);
+  min-height: 100%;
+}
+
+/* Light Mode Overrides for surfaces, borders, text, placeholders, and icons */
+[data-theme='light'] .text-white:not(.keep-white):not(.keep-white *):not(.bg-\[\#C75F71\] *):not(.bg-\[\#C75F71\]) {
+  color: #000000 !important;
+}
+
+[data-theme='light'] [class*="text-white\/"]:not(.keep-white):not(.keep-white *):not(.bg-\[\#C75F71\] *):not(.bg-\[\#C75F71\]) {
+  color: rgba(0, 0, 0, 0.70) !important;
+}
+
+[data-theme='light'] ::placeholder,
+[data-theme='light'] [class*="placeholder-"]::placeholder {
+  color: rgba(0, 0, 0, 0.65) !important;
+  opacity: 1 !important;
+}
+
+[data-theme='light'] svg.text-white:not(.keep-white):not(.keep-white *):not(.bg-\[\#C75F71\] *):not(.bg-\[\#C75F71\]) {
+  color: #000000 !important;
+}
+
+[data-theme='light'] .bg-\[rgba\(255\,255\,255\,0\.06\)\] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme='light'] .border-\[rgba\(255\,255\,255\,0\.2\)\] {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme='light'] .bg-\[rgba\(255\,255\,255\,0\.03\)\] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+[data-theme='light'] .bg-\[rgba\(255\,255\,255\,0\.08\)\] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme='light'] .hover\:bg-\[rgba\(255\,255\,255\,0\.14\)\]:hover {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme='light'] .bg-black\/85 {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme='light'] .bg-\[\#000000\] {
+  background-color: #FFFFFF !important;
+}
+
+/* Ensure primary buttons and active tabs ALWAYS keep bold white text */
+.keep-white,
+[data-theme='light'] .keep-white,
+[data-theme='light'] .keep-white *,
+[data-theme='light'] .bg-\[\#C75F71\],
+[data-theme='light'] .bg-\[\#C75F71\] *,
+[data-theme='light'] button.bg-\[\#C75F71\],
+[data-theme='light'] a.bg-\[\#C75F71\] {
+  color: #FFFFFF !important;
+}
+
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -15,9 +111,9 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(162, 174, 157, 0.3);
+  background: var(--theme-scrollbar-thumb);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(162, 174, 157, 0.5);
+  background: var(--theme-scrollbar-hover);
 }

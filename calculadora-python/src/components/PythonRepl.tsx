@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { pyodideService, PyResult } from '../services/pyodideService';
-import { Terminal, CornerDownLeft, Trash2, Copy, Check, ArrowRight } from 'lucide-react';
+import { Terminal, CornerDownLeft, Trash2, Copy, Check } from 'lucide-react';
 
 interface ReplEntry {
   id: string;
@@ -136,17 +136,17 @@ export const PythonRepl: React.FC<PythonReplProps> = ({ initialCommand }) => {
   ];
 
   return (
-    <div className="bg-[#45392F] border border-[#A2AE9D]/30 rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[650px]">
+    <div className="bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.2)] rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[650px]">
       {/* Terminal Title Bar */}
-      <div className="px-5 py-3 bg-[#352B23] border-b border-[#A2AE9D]/30 flex items-center justify-between">
+      <div className="px-5 py-3 bg-[rgba(255,255,255,0.08)] border-b border-[rgba(255,255,255,0.2)] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 mr-2">
             <div className="w-3 h-3 rounded-full bg-[#C75F71]"></div>
-            <div className="w-3 h-3 rounded-full bg-[#F0B8B8]"></div>
-            <div className="w-3 h-3 rounded-full bg-[#A2AE9D]"></div>
+            <div className="w-3 h-3 rounded-full bg-[rgba(255,255,255,0.4)]"></div>
+            <div className="w-3 h-3 rounded-full bg-[rgba(255,255,255,0.2)]"></div>
           </div>
-          <Terminal className="w-4 h-4 text-[#F0B8B8]" />
-          <span className="text-xs font-mono font-medium text-[#F0B8B8]">
+          <Terminal className="w-4 h-4 text-[var(--theme-text-main)]" />
+          <span className="text-xs font-mono font-medium text-[var(--theme-text-main)]">
             terminal-python ~ cpython-repl
           </span>
         </div>
@@ -154,74 +154,74 @@ export const PythonRepl: React.FC<PythonReplProps> = ({ initialCommand }) => {
         <div className="flex items-center gap-2">
           <button
             onClick={handleClearTerminal}
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[#A2AE9D] hover:text-[#C75F71] rounded-md hover:bg-[#2D231B] transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[var(--theme-text-main)] hover:bg-[rgba(255,255,255,0.14)] rounded-md transition-colors cursor-pointer"
             title="Limpar terminal"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-3.5 h-3.5 text-[var(--theme-text-main)]" />
             <span className="hidden sm:inline">Limpar</span>
           </button>
         </div>
       </div>
 
       {/* Quick Snippet Chips */}
-      <div className="px-4 py-2 bg-[#3A2F27] border-b border-[#A2AE9D]/20 flex items-center gap-2 overflow-x-auto text-xs">
-        <span className="text-[#A2AE9D] text-[11px] font-mono whitespace-nowrap">Comandos rápidos:</span>
+      <div className="px-4 py-2 bg-[rgba(255,255,255,0.06)] border-b border-[rgba(255,255,255,0.2)] flex items-center gap-2 overflow-x-auto text-xs">
+        <span className="text-[var(--theme-text-secondary)] text-[11px] font-mono whitespace-nowrap">Comandos rápidos:</span>
         {quickSnippets.map((snip, idx) => (
           <button
             key={idx}
             onClick={() => handleRunCommand(snip.code)}
-            className="px-2.5 py-1 rounded bg-[#45392F] hover:bg-[#C75F71]/30 border border-[#A2AE9D]/30 text-[#F0B8B8] hover:text-white text-[11px] font-mono whitespace-nowrap transition-colors"
+            className="px-2.5 py-1 rounded bg-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.14)] border border-[rgba(255,255,255,0.2)] text-[var(--theme-text-main)] text-[11px] font-mono whitespace-nowrap transition-colors cursor-pointer"
           >
             {snip.label}
           </button>
         ))}
       </div>
 
-      {/* Terminal Content Body */}
+      {/* Terminal Content Body (bloco de código com rgba(255,255,255,0.03)) */}
       <div
-        className="flex-1 p-4 sm:p-6 overflow-y-auto font-mono text-xs sm:text-sm space-y-4 bg-[#2D231B]"
+        className="flex-1 p-4 sm:p-6 overflow-y-auto font-mono text-xs sm:text-sm space-y-4 bg-[rgba(255,255,255,0.03)] text-[var(--theme-text-main)]"
         onClick={() => inputRef.current?.focus()}
       >
         {history.map((entry) => (
           <div key={entry.id} className="group relative">
             <div className="flex items-start justify-between">
-              <div className="flex items-start gap-2 text-slate-100">
-                <span className="text-[#FFF5F5] select-none font-bold">&gt;&gt;&gt;</span>
-                <span className="font-semibold text-white whitespace-pre-wrap">{entry.command}</span>
+              <div className="flex items-start gap-2 text-[var(--theme-text-main)]">
+                <span className="text-[var(--theme-text-main)] select-none font-bold">&gt;&gt;&gt;</span>
+                <span className="font-semibold text-[var(--theme-text-main)] whitespace-pre-wrap">{entry.command}</span>
               </div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleCopyEntry(entry);
                 }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-[#A2AE9D] hover:text-white transition-opacity"
+                className="opacity-0 group-hover:opacity-100 p-1 text-[var(--theme-text-main)] hover:bg-[rgba(255,255,255,0.14)] rounded transition-opacity cursor-pointer"
                 title="Copiar linha"
               >
                 {copiedId === entry.id ? (
-                  <Check className="w-3.5 h-3.5 text-[#A2AE9D]" />
+                  <Check className="w-3.5 h-3.5 text-[var(--theme-text-main)]" />
                 ) : (
-                  <Copy className="w-3.5 h-3.5" />
+                  <Copy className="w-3.5 h-3.5 text-[var(--theme-text-main)]" />
                 )}
               </button>
             </div>
 
             {/* stdout (from print calls) */}
             {entry.stdout && (
-              <div className="mt-1 pl-6 text-[#F7EDE8] whitespace-pre-wrap leading-relaxed">
+              <div className="mt-1 pl-6 text-[var(--theme-text-secondary)] whitespace-pre-wrap leading-relaxed">
                 {entry.stdout}
               </div>
             )}
 
             {/* evaluated return value */}
             {entry.result && (
-              <div className="mt-1 pl-6 text-[#F0B8B8] font-bold tabular-nums">
+              <div className="mt-1 pl-6 text-[var(--theme-text-main)] font-bold tabular-nums">
                 {entry.result}
               </div>
             )}
 
             {/* error traceback */}
             {entry.error && (
-              <div className="mt-1 pl-6 text-[#F0B8B8] whitespace-pre-wrap bg-[#3A2226] p-2 rounded border border-[#C75F71]/50">
+              <div className="mt-1 pl-6 text-rose-700 dark:text-rose-200 whitespace-pre-wrap bg-rose-500/15 p-2 rounded border border-rose-500/40">
                 {entry.error}
               </div>
             )}
@@ -232,8 +232,8 @@ export const PythonRepl: React.FC<PythonReplProps> = ({ initialCommand }) => {
       </div>
 
       {/* Interactive Command Input Line */}
-      <div className="p-3 bg-[#352B23] border-t border-[#A2AE9D]/30 flex items-center gap-2">
-        <span className="text-[#FFF5F5] font-mono font-bold pl-2 select-none">&gt;&gt;&gt;</span>
+      <div className="p-3 bg-[rgba(255,255,255,0.06)] border-t border-[rgba(255,255,255,0.2)] flex items-center gap-2">
+        <span className="text-[var(--theme-text-main)] font-mono font-bold pl-2 select-none">&gt;&gt;&gt;</span>
         <input
           ref={inputRef}
           type="text"
@@ -242,15 +242,15 @@ export const PythonRepl: React.FC<PythonReplProps> = ({ initialCommand }) => {
           onKeyDown={handleKeyDown}
           placeholder="Digite um cálculo ou código Python (ex: sum([x**2 for x in range(5)]))"
           disabled={isRunning}
-          className="flex-1 bg-transparent font-mono text-xs sm:text-sm text-white placeholder-[#A2AE9D]/50 focus:outline-none"
+          className="flex-1 bg-transparent font-mono text-xs sm:text-sm text-[var(--theme-text-main)] placeholder-[var(--theme-text-muted)] focus:outline-none"
         />
         <button
           onClick={() => handleRunCommand()}
           disabled={isRunning || !currentInput.trim()}
-          className="px-4 py-2 bg-[#C75F71] hover:bg-[#b34f60] disabled:opacity-40 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 shrink-0 shadow-md shadow-[#C75F71]/30"
+          className="px-4 py-2 bg-[#C75F71] hover:bg-[#b34f60] disabled:opacity-40 text-white keep-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 shrink-0 shadow-md shadow-[#C75F71]/30 cursor-pointer"
         >
-          <span>Executar</span>
-          <CornerDownLeft className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span className="text-white keep-white">Executar</span>
+          <CornerDownLeft className="w-3.5 h-3.5 stroke-[2.5] text-white keep-white" />
         </button>
       </div>
     </div>
